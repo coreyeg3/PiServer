@@ -15,7 +15,6 @@ f = open('log.txt','wa+')
 f.write('waiting for a connection\n')
 connection, client_address = sock.accept()
 try:
-	print >>sys.stderr, 'connection from', client_address
 	with open('memmap.txt','r+') as a:
                 mm = mmap.mmap(a.fileno(),0)
                 field0 = mm[:5]
@@ -25,42 +24,41 @@ try:
                 field6 = mm[24:29]
                 field7 = mm[30:35]
 	        	avgt = mm[36:]
+
+                field0 = field0 + '\n'
+                field1 = field1 + '\n'
+                field2 = field2 + '\n'
+                field5 = field5 + '\n'
+                field6 = field6 + '\n'
+                field7 = field7 + '\n'
+                
         while True:
                 data = connection.recv(16)
                 if 'field0' in data:
                         connection.send(field0)
-						connection.send("\n")
                         f.write(time.time())
                         f.write('f0 sent\n')
-                if 'field1' in data:
+                elif 'field1' in data:
                         connection.send(field1)
-						connection.send("\n")
                         f.write(time.time())
                         f.write('f1 sent\n')
-                if 'field2' in data:
-   #                    print >>sys.stderr, 'field 2'
+                elif 'field2' in data:
                         connection.send(field2)
-						connection.send("\n")
                         f.write(time.time())
                         f.write('f2 sent\n')
-                if 'field5' in data:
+                elif 'field5' in data:
                         connection.send(field5)
-						connection.send("\n")
                         f.write(time.time())
                         f.write('f5 sent\n')
-                if 'field6' in data:
-     #                  print >>sys.stderr, 'field6'
+                elif 'field6' in data:
                         connection.send(field6)
-						connection.send("\n")
                         f.write(time.time())
                         f.write('f6 sent\n')
-                if 'field7' in data:
-      #                 print >>sys.stderr, 'field 7'
+                elif 'field7' in data:
                         connection.send(field7)
-						connection.send("\n")
                         f.write(time.time())
                         f.write('f7 sent\n')
-                else
+                else:
                         f.write(time.time())
                         f.write('error in request\n')
 						connection.send("error invalid selection\n")
